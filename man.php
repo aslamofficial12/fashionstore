@@ -35,11 +35,29 @@ session_start();
 
         if(mysqli_num_rows($result) > 0){
           while($fetch_product = mysqli_fetch_assoc($result)){
+            
+            // --- 🔥 THE MAGIC FIX STARTS HERE 🔥 ---
+            
+            $db_image = $fetch_product['p_image']; // Example: "M20.Jpg"
+
+            // 1. Remove Extension: "M20.Jpg" -> "M20"
+            $filename_only = pathinfo($db_image, PATHINFO_FILENAME);
+
+            // 2. FORCE SMALL LETTERS: "M20" -> "m20"
+            // (Idhu dhaan romba mukkiyam!)
+            $clean_name = strtolower($filename_only);
+
+            // 3. ADD .png: "m20" -> "m20.png"
+            $final_image_name = $clean_name . ".png";
+            
+            // --- 🔥 FIX ENDS HERE 🔥 ---
         ?>
           <a href="productdetail.php?edit=<?php echo $fetch_product['id']; ?>">
             <div class="product">
-              <img src="images/products-img/man/<?php echo $fetch_product['p_image']; ?>" 
+              
+              <img src="images/products-img/man/<?php echo $final_image_name; ?>?v=<?php echo time(); ?>" 
                    alt="<?php echo $fetch_product['p_name']; ?>"
+                   class="img-fluid"
                    onerror="this.src='images/logo.png';">
               
               <h3><?php echo $fetch_product['p_name']; ?></h3>
