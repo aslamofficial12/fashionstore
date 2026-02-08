@@ -1,5 +1,6 @@
 <?php
-error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 @include 'include.php';
 ?>
@@ -7,14 +8,14 @@ session_start();
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Products</title>
+    <title>Kids' Fashion</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/style_index.css">
     <link rel="stylesheet" href="css/categories.css">
     <link rel="stylesheet" href="css/products.css">
     <link rel="stylesheet" href="css/nav.css">
     <script src="js/product.js" defer></script>
-    <head>
+  </head>
   <body>
     
   <?php @include 'header.php';?>
@@ -25,22 +26,58 @@ session_start();
         <div class="container">
               <div class="products-container">
               <?php
-                mysqli_select_db($con, "fashionfusion");
+                // 1. Database Fix (Underscore added)
+                mysqli_select_db($con, "fashion_fusion");
+
+                // 2. Query
                 $q1 = "SELECT * FROM `products_kids`";
                 $result = mysqli_query($con, $q1);
-                if(mysqli_num_rows($result) > 0){
+                
+                if($result && mysqli_num_rows($result) > 0){
                 while($fetch_product = mysqli_fetch_assoc($result)){
+                    
+                    // --- 🛠️ IMAGE LOGIC START 🛠️ ---
+                    $db_image = $fetch_product['p_image'];
+                    
+                    // 3. Folder Path Fix (Kids folder)
+                    $folder_path = "images/products-img/kids/"; 
+                    $image_path = $folder_path . $db_image;
+
+                    // 4. File Existence Check
+                    if (file_exists($image_path)) {
+                        $display_image = $image_path;
+                        $debug_msg = "";
+                    } else {
+                        $display_image = "images/logo.png"; // Fallback
+                        
+                        // Yellow Debug Box (Only for missing files)
+                        $debug_msg = "<div style='background: #fff3cd; color: #856404; padding: 5px; font-size: 11px; border: 1px solid #ffeeba; text-align: left; margin-top:5px;'>
+                                        ⚠️ <b>Missing:</b> $db_image <br>
+                                        Folder needs: <b>$db_image</b><br>
+                                        Inside: <i>$folder_path</i>
+                                      </div>";
+                    }
+                    // --- 🛠️ LOGIC END 🛠️ ---
                 ?>
                   <a href="productdetail.php?edit=<?php echo $fetch_product['id']; ?>">
-                  <div class="product">
-                  <img src="admin/uploaded_img/<?php echo $fetch_product['p_image']; ?>" alt="">
+                  <div class="product" style="min-height: 400px;">
+                    
+                    <img src="<?php echo $display_image; ?>?v=<?php echo time(); ?>" 
+                         alt="<?php echo $fetch_product['p_name']; ?>"
+                         class="img-fluid">
+                    
+                    <?php echo $debug_msg; ?>
+
                     <h3><?php echo $fetch_product['p_name']; ?></h3>
                     <div class="price">Rs.<?php echo $fetch_product['p_price']; ?>/-</div>
                   </div>
                 </a>
                   <?php
-                   };
-                    };
+                   }
+                    } else {
+                        echo "<h2>No Products Found!</h2>";
+                        echo "<p>Check table name: 'products_kids' in database.</p>";
+                    }
                   ?>
               </div>
             </div>
