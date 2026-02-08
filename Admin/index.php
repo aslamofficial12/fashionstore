@@ -6,7 +6,9 @@ $admin = $_SESSION['admin_email'];
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX: Changed path to correct location (added ../)
+include '../include.php';
 
 ?>
 <html>
@@ -45,7 +47,8 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM products_man";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         // Check if result exists before counting to avoid errors
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Men's Products</h3>
@@ -61,7 +64,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM products_woman";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Women's Products</h3>
@@ -78,7 +81,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM products_kids";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Kid's Products</h3>
@@ -95,7 +98,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM user_detail";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Total Users</h3>
@@ -112,7 +115,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM admin_detail";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Total Admin</h3>
@@ -129,7 +132,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM orders";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Total Orders</h3>
@@ -146,7 +149,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM orders where status='pending'";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Pending Orders</h3>
@@ -163,7 +166,7 @@ if(!isset($admin)){
                         <?php
                          $q1 = "SELECT * FROM orders where status='approved'";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Approved Order's</h3>
@@ -181,7 +184,7 @@ if(!isset($admin)){
                         $currentDate = date("Y-m-d");
                          $q1 = "SELECT * FROM orders WHERE order_date = '$currentDate'";
                          $result = mysqli_query($con, $q1);
-                         $num_rows = mysqli_num_rows($result);
+                         $num_rows = ($result) ? mysqli_num_rows($result) : 0;
                          echo "<h1>$num_rows</h1>";
                         ?>
                         <h3>Todays Orders</h3>

@@ -3,10 +3,13 @@ error_reporting(0);
 session_start();
 $user=$_SESSION['admin_email'];
 $admin = $_SESSION['admin_email'];
+
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX 1: Correct path to include.php (Added ../)
+include '../include.php';
 
 ?>
 
@@ -27,8 +30,6 @@ if(!isset($admin)){
     margin-top:5%;
     margin-left:33%;
     padding: 20px;
-    /* border-top:2px solid #ff8795;
-    border-bottom:2px solid #ff8795; */
     border:2px solid #ff8795;
     border-radius:10px;
     text-align: center;
@@ -71,14 +72,17 @@ img{
     
 <?php
         $user=$_SESSION['admin_email'];
-        mysqli_select_db($con, "fashionfusion");
+        
+        // FIX 2: Removed incorrect mysqli_select_db line
+        
         $q1 = "SELECT * FROM `admin_detail` where admin_email='$user'";
         $result = mysqli_query($con, $q1);
+        
         if(mysqli_num_rows($result) > 0){
         while($fetch_product = mysqli_fetch_assoc($result)){
         ?>
     <div class="welcome-container">
-        <h1 class="text">Admin Profile<h1>
+        <h1 class="text">Admin Profile</h1>
         <img src="img/profile.png"><br><br>
         <div class='line'></div>
         <h2>Mr/Miss : <?php echo $fetch_product['name']; ?></h2>

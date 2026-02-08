@@ -1,3 +1,7 @@
+<?php
+// PHP Logic should come first or inside the body, but usually include should be loaded to get DB connection.
+// Moving DB include to the top logic block to avoid connection errors.
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +20,7 @@
         <input class="input" type="email" name="email"  placeholder="E-mail">
         <input class="input" type="text" name="contact"  placeholder="Contact Number">
         <div class="input">
-			  <label>Gender</label>
+        <label>Gender</label>
         <input type="radio" value="Male" name="gender" Required>Male
         <input type="radio" value="Female" name="gender">Female
         </div>
@@ -28,57 +32,58 @@
 </center>
 </body>
 </html>
+
 <?php
-      error_reporting();
+      error_reporting(0);
   
       if(isset($_POST['signup']))
       { 
-              $name=$_POST['name'];
-              $email=$_POST['email'];
-              $contact=$_POST['contact'];
-              $gender=$_POST['gender'];
-              $password=$_POST['password'];
+        // FIX 1: Include the database connection file correctly
+        include '../include.php';
 
-        $con=mysqli_connect("localhost","root","","fashionfusion");
-        if(!$con)
-        {
-        die("Failed to coonect");
-        }	
-        mysqli_select_db($con, "fashionfusion");
+        $name=$_POST['name'];
+        $email=$_POST['email'];
+        $contact=$_POST['contact'];
+        $gender=$_POST['gender'];
+        $password=$_POST['password'];
+
+        // FIX 2: Removed manual mysqli_connect and select_db lines because include.php handles it.
+
         $q1 = "SELECT * FROM admin_detail WHERE admin_email = '$email'";
         $result = mysqli_query($con, $q1);
+        
         if(empty($name) OR empty($email) OR empty($contact) OR empty($gender) OR empty($password))
-	    {
+      {
             ?>
             <script>
                 alert("All Fields Are Required");
             </script>
             <?php
-	    }
+      }
         else if(preg_match('/[0-9]+/', $name))
-	    {
+      {
             ?>
             <script>
               alert("Number Not Allowed In Full Name.");
             </script>
             <?php
-	    }
+      }
         else if(!filter_var($email, FILTER_VALIDATE_EMAIL))
-		{
+    {
             ?>
             <script>
               alert("Enter Proper Email Address.");
             </script>
             <?php
-		}
+    }
         else if(!filter_var( $contact,FILTER_SANITIZE_NUMBER_INT))
-	    {
+      {
             ?>
             <script>
                 alert("Enter Proper Contact Number.");
               </script>
             <?php
-	    }
+      }
         else if(strlen($contact)>10)
         {
             ?>
@@ -88,13 +93,13 @@
             <?php
         }
         else if(strlen($password)<8)
-	    {
+      {
             ?>
             <script>
               alert("Password Must Be At Least 8 Charactes Long.");
               </script>
             <?php
-	    }
+      }
         elseif(mysqli_num_rows($result)>0)
         {
             
@@ -112,7 +117,6 @@
        }
        else{
         $q1="INSERT INTO `admin_detail`(name,admin_email,contactno,gender,password) VALUES('$name','$email','$contact','$gender','$password')";
-         mysqli_select_db($con, "fashionfusion");
          $result = mysqli_query($con, $q1);
          if(!$result){
             ?>
@@ -120,7 +124,7 @@
                     Swal.fire({
                       title: "Oops!",
                       text: "Something Went Wrong.",
-                      icon: "error"
+                      icon: "error",
                       showConfirmButton: false,
                       timer:5000
                     });
@@ -145,6 +149,5 @@
             <?php
             }
         }
-        mysqli_close($con);
       }
-  ?>
+ ?>

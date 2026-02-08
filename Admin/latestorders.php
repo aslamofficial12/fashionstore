@@ -1,23 +1,27 @@
 <?php
 error_reporting(0);
 session_start();
-$user=$_SESSION['admin_email'];
+
+$user = $_SESSION['admin_email'];
 $admin = $_SESSION['admin_email'];
+
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX 1: Correct path to include.php (Added ../)
+include '../include.php';
 
 if(isset($_GET['delete'])){
    $delete_id = $_GET['delete'];
-   mysqli_select_db($con, "fashionfusion");
+   
+   // FIX 2: Removed incorrect mysqli_select_db line
    $q1 = "DELETE FROM `orders` WHERE order_id = $delete_id ";
    $result = mysqli_query($con, $q1);
    if($result){
-      header('location:orders.php');
+      header('location:latestorders.php');
    }
 }
-
 ?>
 
 <html>
@@ -52,17 +56,20 @@ if(isset($_GET['delete'])){
          <th>Total Amount</th>
          <th>Date</th>
          <th>Time</th>
+         <th>Action</th> 
       </thead>
 
       <tbody>
          <?php
+         // Get Current Date (Format: YYYY-MM-DD)
          $currentDate = date("Y-m-d");
 
-         mysqli_select_db($con, "fashionfusion");
+         // FIX 3: Removed incorrect mysqli_select_db line
          $q1 = "SELECT * FROM `orders` WHERE order_date = '$currentDate'";
          $result = mysqli_query($con, $q1);
+         
          if(mysqli_num_rows($result) > 0){
-         while($row = mysqli_fetch_assoc($result)){
+            while($row = mysqli_fetch_assoc($result)){
          ?>
 
          <tr>
@@ -74,16 +81,24 @@ if(isset($_GET['delete'])){
             <td><?php echo $row['payment']; ?></td>
             <td><?php echo $row['order_date']; ?></td>
             <td><?php echo $row['order_time']; ?></td>
-         </tr><?php
-                  }    
-                  }
-               ?>
+            <td>
+               <a title='Delete' href="latestorders.php?delete=<?php echo $row['order_id']; ?>" onclick="return confirm('are your sure you want to delete this?');"> <i class="bi bi-trash3"></i></a>
+            </td>
+         </tr>
+         <?php
+            }    
+         } else {
+             // Fallback message if no orders today
+             echo "<tr><td colspan='9'>No Orders Found Today ($currentDate)</td></tr>";
+         }
+         ?>
       </tbody>
    </table>
 
 </section>
 
-</section>
+</div>
+</center>
 </div>
 </body>
 </html>
