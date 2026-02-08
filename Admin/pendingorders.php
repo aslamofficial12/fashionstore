@@ -1,16 +1,22 @@
 <?php
 error_reporting(0);
 session_start();
-$user=$_SESSION['admin_email'];
+
+$user = $_SESSION['admin_email'];
 $admin = $_SESSION['admin_email'];
+
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX 1: Correct path to include.php (Added ../)
+include '../include.php';
 
 if(isset($_GET['approved'])){
    $approved_id = $_GET['approved'];
-   mysqli_select_db($con, "fashionfusion");
+   
+   // FIX 2: Removed incorrect mysqli_select_db line
+   // Note: Assuming 'order_id' is the correct column name in your database based on your code
    $q1 = "UPDATE `orders` set status='approved' WHERE order_id = $approved_id ";
    $result = mysqli_query($con, $q1);
    if($result){
@@ -56,11 +62,12 @@ if(isset($_GET['approved'])){
 
       <tbody>
          <?php
-         mysqli_select_db($con, "fashionfusion");
+         // FIX 3: Removed incorrect mysqli_select_db line
          $q1 = "SELECT * FROM `orders` where status='pending' ";
          $result = mysqli_query($con, $q1);
+         
          if(mysqli_num_rows($result) > 0){
-         while($row = mysqli_fetch_assoc($result)){
+            while($row = mysqli_fetch_assoc($result)){
          ?>
 
          <tr>
@@ -73,18 +80,23 @@ if(isset($_GET['approved'])){
             <td><?php echo $row['order_date']; ?></td>
             <td><?php echo $row['order_time']; ?></td>
             <td>
-               <a title='Approved' href="pendingorders.php?approved=<?php echo $row['order_id']; ?>"onclick="return confirm('are your sure you want to Approve this?');"> <ion-icon class='orderbtn' name="checkmark-done-outline"></ion-icon></a>
+               <a title='Approved' href="pendingorders.php?approved=<?php echo $row['order_id']; ?>" onclick="return confirm('are your sure you want to Approve this?');"> <ion-icon class='orderbtn' name="checkmark-done-outline"></ion-icon></a>
             </td>
-         </tr><?php
-                  }    
-                  }
-               ?>
+         </tr>
+         <?php
+            }    
+         } else {
+             // Added fallback message if no pending orders
+             echo "<tr><td colspan='9'>No Pending Orders!</td></tr>";
+         }
+         ?>
       </tbody>
    </table>
 
 </section>
 
-</section>
+</div>
+</center>
 </div>
 </body>
 </html>

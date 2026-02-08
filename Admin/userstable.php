@@ -1,23 +1,27 @@
 <?php
 error_reporting(0);
 session_start();
-$user=$_SESSION['admin_email'];
+
+$user = $_SESSION['admin_email'];
 $admin = $_SESSION['admin_email'];
+
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX 1: Correct path to include.php (Added ../)
+include '../include.php';
 
 if(isset($_GET['delete'])){
    $delete_id = $_GET['delete'];
-   mysqli_select_db($con, "fashionfusion");
+   
+   // FIX 2: Removed incorrect mysqli_select_db line
    $q1 = "DELETE FROM `user_detail` WHERE id = $delete_id ";
    $result = mysqli_query($con, $q1);
    if($result){
       header('location:userstable.php');
    }
 }
-
 ?>
 
 <html>
@@ -53,11 +57,12 @@ if(isset($_GET['delete'])){
 
       <tbody>
          <?php
-         mysqli_select_db($con, "fashionfusion");
+         // FIX 3: Removed incorrect mysqli_select_db line
          $q1 = "SELECT * FROM `user_detail`";
          $result = mysqli_query($con, $q1);
+         
          if(mysqli_num_rows($result) > 0){
-         while($row = mysqli_fetch_assoc($result)){
+            while($row = mysqli_fetch_assoc($result)){
          ?>
 
          <tr>
@@ -68,14 +73,19 @@ if(isset($_GET['delete'])){
             <td>
                <a title="Delete" href="userstable.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('are your sure you want to delete this?');"> <i class="bi bi-trash3"></i></a>
             </td>
-         </tr><?php
-                  }    
-                  }
-               ?>
+         </tr>
+         <?php
+            }    
+         } else {
+             echo "<tr><td colspan='5'>No Users Found</td></tr>";
+         }
+         ?>
       </tbody>
    </table>
 
 </section>
+</div>
+</center>
 </div>
 </body>
 </html>

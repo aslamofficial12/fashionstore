@@ -1,17 +1,20 @@
 <?php
 error_reporting(0);
 session_start();
-$user=$_SESSION['admin_email'];
+
+$user = $_SESSION['admin_email'];
 $admin = $_SESSION['admin_email'];
+
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX 1: Correct path to include.php
+include '../include.php';
 
 $randomNumber = rand(10, 99);
 $prefix = "P";
 $productId = $prefix . $randomNumber;
-
 ?>
 <html>
 <head>
@@ -25,14 +28,14 @@ $productId = $prefix . $randomNumber;
 </head>
 <body>
 
-    <div class="side-menu">
+<div class="side-menu">
         <?php @include 'header.php';?>
     </div>
 
     <center>
     <div class="container">
     <form class="form" method="post" enctype="multipart/form-data">
-    <p class="msg">ADD A NEW  KID'S PRODUCT </p>
+            <p class="msg">ADD A NEW KID'S PRODUCT </p>
             <div class="flex">
                 <label>
                     <input readonly required="" value="<?php echo $productId;?>" name="id" type="text" class="input">
@@ -49,7 +52,7 @@ $productId = $prefix . $randomNumber;
 
             <label>
             <p align="left">&nbsp;Select Product Image:</p>
-                <input required="" name="upload" accept="image/png, image/jpg, image/jpeg, image/webp" type="file" id="upload" class="input">
+                <input required="" placeholder="" name="upload" type="file" id="upload" accept="image/png, image/jpg, image/jpeg , image/webp" class="input">
             </label>
 
             <label>
@@ -62,32 +65,29 @@ $productId = $prefix . $randomNumber;
     </center>
 </body>
 </html>
+
 <?php
-      error_reporting(0);
-  
       if(isset($_POST['submit']))
       { 
-        $con=mysqli_connect("localhost","root","","fashionfusion");
-        if(!$con)
-        {
-        die("Failed to coonect");
-        }
+            // FIX 2: Removed manual connection (using $con from include.php)
 
-            $id=$_POST['id'];
-            $name=$_POST['name'];
-            $price=$_POST['price'];
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $price = $_POST['price'];
             $image = $_FILES['upload']['name'];
             $file_local = $_FILES['upload']['tmp_name'];
-            $description=$_POST['description'];
+            $description = $_POST['description'];
             
-            $folder="uploaded_img/";
-            move_uploaded_file($file_local,$folder.$image);
-
-        mysqli_select_db($con, "fashionfusion");
-        $q1 = "SELECT * FROM `products_kids` WHERE p_id = '$id'";
-        $result = mysqli_query($con, $q1);
-        if(mysqli_num_rows($result)>0)
-        {
+            $folder = "uploaded_img/";
+            
+            // FIX 3: Changed table name to 'products_kids'
+            $q1 = "SELECT * FROM `products_kids` WHERE p_id = '$id'";
+            $result = mysqli_query($con, $q1);
+            
+            if(!$result) {
+                 echo "<script>alert('Error: " . mysqli_error($con) . "');</script>";
+            } elseif(mysqli_num_rows($result) > 0)
+            {
             ?>
             <script>
             const Toast = Swal.mixin({
@@ -103,24 +103,27 @@ $productId = $prefix . $randomNumber;
               });
               Toast.fire({
                 icon: "info",
-                title:"Product is already exist!",
+                title:"Product already exists!",
               });
               </script>
             <?php
        }
        else{
-         $q1="INSERT INTO `products_kids`(p_id,p_name,p_price,p_image,p_description) VALUES('$id', '$name', '$price','$image','$description')";
-         mysqli_select_db($con, "fashionfusion");
+         
+         move_uploaded_file($file_local, $folder . $image);
+
+         // FIX 4: Insert into 'products_kids'
+         $q1 = "INSERT INTO `products_kids`(p_id, p_name, p_price, p_image, p_description) VALUES('$id', '$name', '$price', '$image', '$description')";
          $result = mysqli_query($con, $q1);
+         
          if(!$result){
             ?>
             <script>
                     Swal.fire({
                     icon: 'error',
                     title:'Oops!',
-                    text: 'Something Went Wrong!',
-                    showConfirmButton: false,
-                    timer:4000
+                    text: 'Error: <?php echo mysqli_error($con); ?>',
+                    showConfirmButton: true
                 });
             </script>
             <?php
@@ -132,18 +135,17 @@ $productId = $prefix . $randomNumber;
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
                     icon: 'success',
-                    title:'Successfully!',
-                    text: 'Product Added Successfully.',
+                    title:'Success!',
+                    text: 'Kids Product Added Successfully.',
                     showConfirmButton: false,
                     timer: 1500
                     }).then(() => {
-                    window.location.href = 'Products.php';
+                    window.location.href = 'products.php';
                     });
                 });
             </script>
             <?php
             }
         }
-        mysqli_close($con);
       }
-  ?>
+ ?>

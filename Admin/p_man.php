@@ -1,12 +1,16 @@
 <?php
 error_reporting(0);
 session_start();
-$user=$_SESSION['admin_email'];
+
+$user = $_SESSION['admin_email'];
 $admin = $_SESSION['admin_email'];
+
 if(!isset($admin)){
    header('location:admin_login.php');
 }
-@include 'include.php';
+
+// FIX 1: Correct path (Added ../)
+include '../include.php';
 
 $randomNumber = rand(10, 99);
 $prefix = "P";
@@ -61,33 +65,29 @@ $productId = $prefix . $randomNumber;
     </center>
 </body>
 </html>
+
 <?php
-      error_reporting(0);
-  
       if(isset($_POST['submit']))
       { 
-        $con=mysqli_connect("localhost","root","","fashionfusion");
-        if(!$con)
-        {
-        die("Failed to coonect");
-        }
+         // FIX 2: Removed manual connection (mysqli_connect) because we use $con from include.php
+         // FIX 3: Removed incorrect DB name 'fashionfusion'
 
-            $id=$_POST['id'];
-            $name=$_POST['name'];
-            $price=$_POST['price'];
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $price = $_POST['price'];
             $image = $_FILES['upload']['name'];
             $file_local = $_FILES['upload']['tmp_name'];
-            $description=$_POST['description'];
+            $description = $_POST['description'];
             
-            $folder="uploaded_img/";
-            move_uploaded_file($file_local,$folder.$image);
-
-
-        mysqli_select_db($con, "fashionfusion");
-        $q1 = "SELECT * FROM `products_man` WHERE p_id = '$id'";
-        $result = mysqli_query($con, $q1);
-        if(mysqli_num_rows($result)>0)
-        {
+            $folder = "uploaded_img/";
+            
+            // Check if product ID already exists
+            // Note: Ensure your table has a column named 'p_id'. If not, change this to 'id'
+            $q1 = "SELECT * FROM `products_man` WHERE p_id = '$id'";
+            $result = mysqli_query($con, $q1);
+            
+            if(mysqli_num_rows($result) > 0)
+            {
             ?>
             <script>
             const Toast = Swal.mixin({
@@ -103,24 +103,28 @@ $productId = $prefix . $randomNumber;
               });
               Toast.fire({
                 icon: "info",
-                title:"Product is already exist!",
+                title:"Product already exists!",
               });
               </script>
             <?php
        }
        else{
-         $q1="INSERT INTO `products_man`(p_id,p_name,p_price,p_image,p_description) VALUES('$id', '$name', '$price','$image','$description')";
-         mysqli_select_db($con, "fashionfusion");
+         // Upload Image
+         move_uploaded_file($file_local, $folder . $image);
+
+         // Insert Query
+         $q1 = "INSERT INTO `products_man`(p_id, p_name, p_price, p_image, p_description) VALUES('$id', '$name', '$price', '$image', '$description')";
          $result = mysqli_query($con, $q1);
+         
          if(!$result){
             ?>
             <script>
                     Swal.fire({
                     icon: 'error',
                     title:'Oops!',
-                    text: 'Something Went Wrong!',
-                    showConfirmButton: false,
-                    timer:4000
+                    // Show exact SQL error for debugging
+                    text: 'Error: <?php echo mysqli_error($con); ?>', 
+                    showConfirmButton: true
                 });
             </script>
             <?php
@@ -132,18 +136,17 @@ $productId = $prefix . $randomNumber;
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
                     icon: 'success',
-                    title:'Successfully!',
+                    title:'Success!',
                     text: 'Product Added Successfully.',
                     showConfirmButton: false,
                     timer: 1500
                     }).then(() => {
-                    window.location.href = 'Products.php';
+                    window.location.href = 'products.php';
                     });
                 });
             </script>
             <?php
             }
         }
-        mysqli_close($con);
       }
-  ?>
+ ?>
