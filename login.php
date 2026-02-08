@@ -1,8 +1,7 @@
 <?php
 session_start();
-// Error reporting - Idhu errors irundha screen la kaatum
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Error reporting off for users to avoid messy screen
+error_reporting(0);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +19,6 @@ ini_set('display_errors', 1);
 <body>
 
 <?php 
-// Header file irundha include pannum, illana error varadhu (@ symbol)
 @include 'header.php';
 ?>
 
@@ -41,34 +39,30 @@ ini_set('display_errors', 1);
         <br>
         <hr>
         <h4 class="text">Don't Have An Account? <a href="signup.php">Sign Up</a></h4>
+        
+        <h4 class="text" style="margin-top: 15px;">Are you an Admin? <a href="admin/admin_login.php" style="color: #ff8795; font-weight: bold;">Login Here</a></h4>
+        
       </div>
     </div>
 
 <?php
-// PHP LOGIN LOGIC STARTS HERE
 if(isset($_POST['login']))
 {
+    // FIX: Using include.php for correct DB connection
+    include 'include.php';
+
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // 1. Database Connection (Updated to 'fashion_fusion')
-    $con = mysqli_connect("localhost", "root", "", "fashion_fusion");
-
-    // Connection Check
-    if(!$con) {
-        die("Connection Failed: " . mysqli_connect_error());
-    }   
-
-    // 2. Query to check User (Updated to 'user_detail' table)
-    // Note: Use prepared statements in production for security
+    // Query to check User in user_detail table
     $q1 = "SELECT * FROM `user_detail` WHERE email='$email' AND password='$password'";
-    
     $result = mysqli_query($con, $q1);
 
     if(mysqli_num_rows($result) > 0) {
         // Login Success
         $row = mysqli_fetch_assoc($result);
         $_SESSION['email'] = $row['email']; 
+        $_SESSION['user_id'] = $row['id']; // Storing ID is safer
         ?>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -79,7 +73,7 @@ if(isset($_POST['login']))
                     showConfirmButton: false,
                     timer: 1500
                 }).then(() => {
-                    window.location.href = 'index.php'; // Redirect to home
+                    window.location.href = 'index.php'; // Redirect to User Home
                 });
             });
         </script>
@@ -92,7 +86,7 @@ if(isset($_POST['login']))
                 Swal.fire({
                     icon: 'error',
                     title: 'Login Failed',
-                    text: 'Invalid Email or Password!',
+                    text: 'Invalid Email or Password! (Please check if you Signed Up correctly)',
                     showConfirmButton: true
                 });
             });
