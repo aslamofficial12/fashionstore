@@ -123,7 +123,9 @@ $productId = $prefix . $randomNumber;
                     icon: 'error',
                     title:'Oops!',
                     // Show exact SQL error for debugging
-                    text: 'Error: <?php echo mysqli_error($con); ?>', 
+        
+        
+        \            text: 'Error: <?php echo mysqli_error($con); ?>', 
                     showConfirmButton: true
                 });
             </script>
@@ -149,4 +151,4 @@ $productId = $prefix . $randomNumber;
             }
         }
       }
- ?>
+ wqqqq                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ?>

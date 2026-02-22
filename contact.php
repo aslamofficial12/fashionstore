@@ -295,6 +295,6 @@ $con=mysqli_connect("localhost","root","","fashionfusion")or die("not connect.."
           </h6>
       </div>
     </div>
-  <p class="copy-right">&copy;2024 Fashion Fusion All Rights Reserved.</p>
+  <p class="copy-right">&copy;2026 Fashion Fusion All Rights Reserved.</p>
   </body>
 </html>

@@ -206,6 +206,6 @@ Thank you for choosing Fashion Fusion as your go-to destination for all
       </div>
     </div>
 
-  <p class="copy-right">&copy;2024 Fashion Fusion All Rights Reserved.</p>
+  <p class="copy-right">&copy;2026 Fashion Fusion All Rights Reserved.</p>
   </body>
 </html>
