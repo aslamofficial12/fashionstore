@@ -268,6 +268,9 @@ function renderProduct($fetch_edit, $category_link) { ?>
                     </div>
                 </div>
 
+                <button type="button" id="btnFindFit" style="margin-top: 10px; margin-left: 10px; cursor: pointer; padding: 8px 15px; background-color: #ff4757; color: white; border: none; border-radius: 5px; font-weight: bold;">
+    Find My Fit 📏
+</button>
                 <div class="action-row">
                     <div class="qty-wrapper">
                         <button type="button" class="qty-btn" onclick="decrementQty()">-</button>
@@ -357,6 +360,119 @@ if(isset($_GET['edit'])){
     });
 </script>
 <?php } ?>
+
+
+
+<!-- popup -->
+<div id="fitFinderModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6);">
+    <div style="background-color:#fff; margin:10% auto; padding:25px; width:300px; border-radius:10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative;">
+        <span id="closeFitModal" style="position: absolute; right: 15px; top: 10px; font-size:24px; cursor:pointer; color: #888;">&times;</span>
+        <h3 style="margin-top: 0; color: #333;">Smart Fit-Finder</h3>
+        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter details to get a size recommendation.</p>
+        
+        <input type="hidden" id="fit_product_id" value="<?php echo isset($product_id) ? $product_id : 107; ?>"> 
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-size: 14px; font-weight: bold;">Height (cm):</label><br>
+            <input type="number" id="fit_height" placeholder="e.g. 170" required style="width:100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="font-size: 14px; font-weight: bold;">Weight (kg):</label><br>
+            <input type="number" id="fit_weight" placeholder="e.g. 65" required style="width:100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        
+        <button type="button" id="btnGetRecommendation" style="width:100%; padding:12px; cursor:pointer; background-color: #2ed573; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 15px;">Get Recommendation</button>
+        <div id="fitFinderMessage" style="margin-top:15px; font-size:14px; text-align: center;"></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    var modal = $('#fitFinderModal');
+
+    // Button click panna Modal open aagum
+    $('#btnFindFit').click(function(e) {
+        e.preventDefault();
+        modal.show();
+        $('#fitFinderMessage').html(''); // Pazhaya message-a clear pannidum
+    });
+
+    // Close button click panna Modal close aagum
+    $('#closeFitModal').click(function() {
+        modal.hide();
+    });
+
+    // Modal-ku veliya click panna close aagum
+    $(window).click(function(event) {
+        if (event.target.id === 'fitFinderModal') {
+            modal.hide();
+        }
+    });
+
+    // Get Recommendation Logic
+    $('#btnGetRecommendation').click(function(e) {
+        e.preventDefault();
+        
+        var productId = $('#fit_product_id').val();
+        var height = $('#fit_height').val();
+        var weight = $('#fit_weight').val();
+
+        if (!height || !weight) {
+            $('#fitFinderMessage').html('<span style="color:red; font-weight:bold;">Height and Weight enter pannunga.</span>');
+            return;
+        }
+
+        var btn = $(this);
+        btn.text('Calculating...').prop('disabled', true);
+        $('#fitFinderMessage').html('<span style="color:blue;">Checking algorithms...</span>');
+
+        $.ajax({
+            url: 'ajax_find_fit.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                product_id: productId,
+                user_height_cm: height,
+                user_weight_kg: weight
+            },
+            success: function(response) {
+                btn.text('Get Recommendation').prop('disabled', false);
+                
+                if (response.success) {
+                    var resultHtml = '<div style="text-align: left; margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px;">';
+                    
+                    $.each(response.data, function(index, item) {
+                        resultHtml += '<div style="margin-bottom: 12px; padding: 10px; border-radius: 5px; background-color: #f9f9f9; border-left: 5px solid ' + item.color + ';">';
+                        resultHtml += '<strong>Size ' + item.size + ' - <span style="color:' + item.color + ';">' + item.percentage + '% Match</span></strong><br>';
+                        resultHtml += '<span style="font-size: 13px; color: #555;">' + item.message + '</span>';
+                        resultHtml += '</div>';
+                    });
+                    
+                    resultHtml += '</div>';
+                    $('#fitFinderMessage').html(resultHtml);
+                    
+                } else {
+                    $('#fitFinderMessage').html('<span style="color:red; font-weight:bold;">' + response.message + '</span>');
+                }
+            },
+            error: function() {
+                btn.text('Get Recommendation').prop('disabled', false);
+                $('#fitFinderMessage').html('<span style="color:red; font-weight:bold;">Server error occurred.</span>');
+            }
+        });
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
