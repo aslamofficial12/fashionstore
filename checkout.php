@@ -16,7 +16,6 @@ if(!isset($user)){
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <title>checkout</title>
 
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="css/checkout.css">
    <link rel="stylesheet" href="css/nav.css">
 
@@ -32,7 +31,7 @@ if(!isset($user)){
 
    <h1 class="heading">complete your order</h1>
 
-   <form action="" method="post">
+   <form action="payment_sandbox.php" method="POST">
 
    <div class="display-order">
       <?php
@@ -58,11 +57,11 @@ if(!isset($user)){
       ?>
       <span class="grand-total"> grand total : Rs.<?= $grand_total; ?>/- </span>
    </div>
-   <form method='POST'>
+   
       <div class="flex">
    <?php
         $user=$_SESSION['email'];
-        mysqli_select_db($con, "fashionfusion");
+        // KEEZHA IRUNDHA mysqli_select_db LINE REMOVE PANNIPATADHU
         $q1 = "SELECT * FROM `user_detail` where email='$user'";
         $result = mysqli_query($con, $q1);
         if(mysqli_num_rows($result) > 0){
@@ -70,22 +69,22 @@ if(!isset($user)){
         ?>
          <div class="inputBox">
             <span>your name</span>
-            <input readonly type="text" value=" <?php echo $fetch_product['name']; ?>" name="name" required>
+            <input readonly type="text" value="<?php echo trim($fetch_product['name']); ?>" name="name" required>
          </div>
 
          <div class="inputBox">
             <span>your number</span>
-            <input readonly type="text" value=" <?php echo $fetch_product['contactno']; ?>" name="contact" required>
+            <input readonly type="text" value="<?php echo trim($fetch_product['contactno']); ?>" name="contact" required>
          </div>
 
          <div class="inputBox">
             <span>your email</span>
-            <input readonly type="email"  value=" <?php echo $fetch_product['email']; ?>" name="email" required>
+            <input readonly type="email"  value="<?php echo trim($fetch_product['email']); ?>" name="email" required>
          </div>
          
          <div class="inputBox">
             <span>Gender</span>
-            <input readonly type="text" value=" <?php echo $fetch_product['gender']; ?>" name="gender" required>
+            <input readonly type="text" value="<?php echo trim($fetch_product['gender']); ?>" name="gender" required>
          </div>
          <?php
           };
@@ -94,7 +93,7 @@ if(!isset($user)){
          <div class="inputBox">
             <span>payment method</span>
             <select readonly name="">
-               <option value="cash on delivery" selected>cash on devlivery</option>
+               <option value="Online Payment" selected>Online Payment</option>
             </select>
          </div>
 
@@ -130,96 +129,13 @@ if(!isset($user)){
 
          <div class="inputBox">
             <span>Pay Money</span>
-            <input readonly type="text" value=" <?php echo'Rs.'. $grand_total .'/-'; ?>" name="payment" >
+            <input readonly type="text" value="<?php echo'Rs.'. $grand_total .'/-'; ?>" name="payment" >
          </div>
 
       </div>
-      <input type="submit" value="order now" name="order_btn" class="btn">
+      <input type="submit" value="Pay Now" name="order_btn" class="btn">
    </form>
 </section>
 </div>
 </body>
 </html>
-<?php
-error_reporting(0);
-
-if(isset($_POST['order_btn']))
-{ 
-      $user=$_SESSION['email'];
-      $items=$_POST['items'];
-      $custname=$_POST['name'];
-      $contactno=$_POST['contact'];
-      $email=$_POST['email'];
-      $gender=$_POST['gender'];
-      $address=$_POST['address'];
-      $city=$_POST['city'];
-      $state=$_POST['state'];
-      $country=$_POST['country'];
-      $pincode=$_POST['pin_code'];
-      $payment=$_POST['payment'];
-
-      mysqli_select_db($con, "fashionfusion");
-      $q1 = "SELECT * FROM orders WHERE email = '$user' AND status='pending'";
-      $result = mysqli_query($con, $q1);
-      if(empty($items)){
-
-         ?>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    Swal.fire({
-                    icon: 'info',
-                    title:'Sorry !',
-                    text: 'Your Cart Is Empty , Shopping Now.',
-                    }).then(() => {
-                    window.location.href = 'Products.php';
-                    });
-                });
-            </script>
-            <?php
-      }
-      elseif(mysqli_num_rows($result)>0)
-        {   
-
-            ?>
-            <script>
-               document.addEventListener('DOMContentLoaded', function() {
-                  Swal.fire({
-                  icon: 'info',
-                  title:'Sorry !',
-                  text: 'Your Previous Request is Pending , Please Wait For Approval.',
-                  }).then(() => {
-                  window.location.href = 'cart.php';
-                  });
-               });
-            </script>
-            <?php
-       }
-      else {
-         $q1="INSERT INTO `orders`(items,custname,contactno,email,gender,address,city,state,country,pincode,payment) VALUES('$items','$custname','$contactno','$email','$gender','$address','$city','$state','$country','$pincode','$payment')";
-      mysqli_select_db($con, "fashionfusion");
-      $result = mysqli_query($con, $q1);
-
-      if($result)
-      {
-         $q1="DELETE FROM  `cart` where email='$user'";
-         mysqli_select_db($con, "fashionfusion");
-         $result = mysqli_query($con, $q1);
-
-         ?>
-         <script>
-             document.addEventListener('DOMContentLoaded', function() {
-                 Swal.fire({
-                 icon: 'success',
-                 title:'Your Order has been Placed Successfully.',
-                 text: 'View Bill.',
-                 }).then(() => {
-                 window.location.href = 'cart.php';
-                 });
-             });
-         </script>
-         <?php
-      }
-      }
-      
-}
-?>
