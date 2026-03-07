@@ -363,9 +363,8 @@ if(isset($_GET['edit'])){
 
 
 
-<!-- popup -->
-<div id="fitFinderModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6);">
-    <div style="background-color:#fff; margin:10% auto; padding:25px; width:300px; border-radius:10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative;">
+<div id="fitFinderModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); align-items: center; justify-content: center; overflow-y: auto;">
+    <div style="background-color:#fff; padding:25px; width:300px; border-radius:10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; margin: 20px auto;">
         <span id="closeFitModal" style="position: absolute; right: 15px; top: 10px; font-size:24px; cursor:pointer; color: #888;">&times;</span>
         <h3 style="margin-top: 0; color: #333;">Smart Fit-Finder</h3>
         <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter details to get a size recommendation.</p>
@@ -391,19 +390,17 @@ if(isset($_GET['edit'])){
 $(document).ready(function() {
     var modal = $('#fitFinderModal');
 
-    // Button click panna Modal open aagum
+    // Change .show() to .css('display', 'flex') for perfect centering
     $('#btnFindFit').click(function(e) {
         e.preventDefault();
-        modal.show();
-        $('#fitFinderMessage').html(''); // Pazhaya message-a clear pannidum
+        modal.css('display', 'flex'); 
+        $('#fitFinderMessage').html(''); 
     });
 
-    // Close button click panna Modal close aagum
     $('#closeFitModal').click(function() {
         modal.hide();
     });
 
-    // Modal-ku veliya click panna close aagum
     $(window).click(function(event) {
         if (event.target.id === 'fitFinderModal') {
             modal.hide();
@@ -419,7 +416,7 @@ $(document).ready(function() {
         var weight = $('#fit_weight').val();
 
         if (!height || !weight) {
-            $('#fitFinderMessage').html('<span style="color:red; font-weight:bold;">Height and Weight enter pannunga.</span>');
+            $('#fitFinderMessage').html('<span style="color:red; font-weight:bold;">Please Enter your Height and Weight </span>');
             return;
         }
 
@@ -464,15 +461,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>

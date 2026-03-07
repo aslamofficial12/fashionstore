@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 $conn = mysqli_connect("localhost", "root", "", "fashion_fusion");
 
 if (!$conn) {
-    echo json_encode(["success" => false, "message" => "Database connection failed."]);
+    echo json_encode(["success" => false, "message" => "Database connection error."]);
     exit;
 }
 
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $height = isset($_POST['user_height_cm']) ? (int)$_POST['user_height_cm'] : 0;
     $weight = isset($_POST['user_weight_kg']) ? (int)$_POST['user_weight_kg'] : 0;
 
-    // Testing-kaga product_id varalana default aaga 107 (unga shirt id) vechukalam
+    // Default product_id for testing (Shirt ID 107)
     if ($product_id == 0) {
         $product_id = 107; 
     }
@@ -40,56 +40,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $min_h = $row['min_height_cm'];
                 $max_h = $row['max_height_cm'];
 
-                // --- NEW REAL MATHEMATICAL LOGIC STARTS HERE ---
-                
+                // --- CALCULATION LOGIC ---
                 $weight_score = 100;
                 $height_score = 100;
 
-                // 1. Weight Penalty (Drop 2 points for every kg off the limit)
                 if ($weight < $min_w) {
                     $weight_score -= ($min_w - $weight) * 2; 
                 } elseif ($weight > $max_w) {
                     $weight_score -= ($weight - $max_w) * 2;
                 }
 
-                // 2. Height Penalty (Drop 1.5 points for every cm off the limit)
                 if ($height < $min_h) {
                     $height_score -= ($min_h - $height) * 1.5; 
                 } elseif ($height > $max_h) {
                     $height_score -= ($height - $max_h) * 1.5;
                 }
 
-                // Ensure scores don't drop below 0 before final calculation
                 $weight_score = max(0, $weight_score);
                 $height_score = max(0, $height_score);
 
-                // 3. Total Percentage Calculation 
-                // Weight is generally more critical for fit, so 60% weightage for weight, 40% for height
                 $percentage = round(($weight_score * 0.6) + ($height_score * 0.4));
-
-                // 4. Safety Bounds: Keep percentage between 5% and 100%
                 $percentage = min(100, max(5, $percentage));
 
-                // If it's a very low score, add a tiny random variation so all "bad" sizes don't look identical
                 if ($percentage <= 15) {
                     $percentage = rand(5, 12);
                 }
 
-                // 5. Categorize and format feedback based on actual metrics
+                // --- PROFESSIONAL FEEDBACK MESSAGES ---
                 if ($percentage >= 85) {
-                    $message = "Perfect match! Height and Weight correct ah irukku.";
+                    $message = "Perfect Match! This size aligns ideally with your measurements.";
                     $color = "#2ed573"; // Green
                 } elseif ($weight > $max_w && $percentage >= 45) {
-                    $message = "Cloth tight irukkum. Dress romba fit ah irukkum.";
+                    $message = "Slim Fit. This garment may feel tight or body-hugging.";
                     $color = "#ffa502"; // Orange
                 } elseif ($weight < $min_w && $percentage >= 45) {
-                    $message = "Dress ungalukku loose ah irukkum.";
+                    $message = "Relaxed Fit. This size might be slightly loose for your build.";
                     $color = "#1e90ff"; // Blue
                 } else {
-                    $message = "Not fit for you. Romba small/large.";
+                    $message = "Not Recommended. This size is significantly different from your fit profile.";
                     $color = "#ff4757"; // Red
                 }
-                // --- NEW REAL MATHEMATICAL LOGIC ENDS HERE ---
 
                 $size_results[] = [
                     "size" => $size,
@@ -107,12 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (count($size_results) > 0) {
                 echo json_encode(["success" => true, "data" => $size_results]);
             } else {
-                echo json_encode(["success" => false, "message" => "Size data database-la illai."]);
+                echo json_encode(["success" => false, "message" => "Size guide data not found for this product."]);
             }
             mysqli_stmt_close($stmt);
         }
     } else {
-        echo json_encode(["success" => false, "message" => "Height/Weight sariya enter pannunga."]);
+        echo json_encode(["success" => false, "message" => "Please provide valid height and weight values."]);
     }
 }
 ?>
