@@ -124,29 +124,64 @@ session_start();
             <p>Experience premium fabrics crafted just for you.</p>
         </div>
 
+
+
+
+        
+
         <div class="trending-section">
-          <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 40px;">Trending Now</h2>
+          <h2 style="text-align: center; font-size:50px; font-family: 'Playfair Display', serif; margin-bottom: 40px; color:black;">Trending Now</h2>
           <div class="trending-grid">
               <div class="card">
                   <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=500&auto=format&fit=crop" alt="T-Shirt">
-                  <div class="card-body"><p style="color:black;"><b>Classic White Tee</b><br>Rs. 499</p></div>
+                  <div class="card-body"><p style="color:black;"><b>Classic White Tee</b></p></div>
               </div>
               <div class="card">
                   <img src="https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=500&auto=format&fit=crop" 
                        alt="Urban Denim Jacket"
                        onerror="this.src='https://via.placeholder.com/300x300?text=Denim+Jacket'">
-                  <div class="card-body"><p style="color:black;"><b>Urban Denim Jacket</b><br>Rs. 1299</p></div>
+                  <div class="card-body"><p style="color:black;"><b>Urban Denim Jacket</b></p></div>
               </div>
               <div class="card">
                   <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=500&auto=format&fit=crop" alt="Dress">
-                  <div class="card-body"><p style="color:black;"><b>Summer Floral Dress</b><br>Rs. 899</p></div>
+                  <div class="card-body"><p style="color:black;"><b>Summer Floral Dress</b></p></div>
               </div>
               <div class="card">
                   <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=500&auto=format&fit=crop" alt="Chinos">
-                  <div class="card-body"><p style="color:black;"><b>Slim Fit Chinos</b><br>Rs. 799</p></div>
+                  <div class="card-body"><p style="color:black;"><b>Slim Fit Chinos</b></p></div>
               </div>
           </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div class="reviews-section">
             <h2 style="text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 40px;color:black;">What Our Customers Say</h2>
@@ -156,6 +191,15 @@ session_start();
                     <p style="color:black;">"The quality is amazing! Best online shopping experience."</p>
                     <p style="color:black;"><strong>- Priya S.</strong></p>
                 </div>
+
+ <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p style="color:black;">"The quality is amazing! Best online shopping experience."</p>
+                    <p style="color:black;"><strong>- Priya S.</strong></p>
+                </div>
+
+
+
             </div>
         </div>
     </div>

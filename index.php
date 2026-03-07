@@ -412,18 +412,51 @@ session_start();
                   </div>
                   <div class="cat-title">Elegant Dresses</div>
               </div>
-              <div class="cat-circle-item">
+              <!-- <div class="cat-circle-item">
                   <div class="cat-circle-img">
                       <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=600&q=80" alt="Summer Styles">
                   </div>
                   <div class="cat-title">Summer Styles</div>
-              </div>
+              </div> -->
+
               <div class="cat-circle-item">
+    <div class="cat-circle-img">
+        <img src="https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=600&q=80" alt="Boys Summer Style">
+    </div>
+    <div class="cat-title"> Summer Styles</div>
+</div>
+
+
+
+<!-- <div class="cat-circle-item">
+<div class="cat-circle-img">
+<img src="[https://images.unsplash.com/photo-1521577352947-9bb58764b69a?auto=format&fit=crop&w=600&q=80](https://www.google.com/url?sa=E&source=gmail&q=https://images.unsplash.com/photo-1521577352947-9bb58764b69a?auto=format%26fit=crop%26w=600%26q=80)" alt="T-Shirts">
+</div>
+<div class="cat-title">T-Shirts</div>
+</div> -->
+
+<!-- <div class="cat-circle-item">
+    <div class="cat-circle-img">
+        <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" alt="T-Shirts">
+    </div>
+    <div class="cat-title">T-Shirts</div>
+</div> -->
+
+<div class="cat-circle-item">
+    <div class="cat-circle-img">
+        <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=600&q=80" alt="T-Shirts">
+    </div>
+    <div class="cat-title">T-Shirts</div>
+</div>
+
+
+
+              <!-- <div class="cat-circle-item">
                   <div class="cat-circle-img">
                       <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=600&q=80" alt="Accessories">
                   </div>
-                  <div class="cat-title">Accessories</div>
-              </div>
+                  <div class="cat-title">T-Shirts</div>
+              </div> -->
           </div>
       </section>
 
@@ -467,7 +500,7 @@ session_start();
                   </div>
               </div>
               
-               <div class="product-card">
+               <!-- <div class="product-card">
                   <div class="p-img-container">
                       <img src="https://images.unsplash.com/photo-1519238809107-748f54fad8dc?auto=format&fit=crop&w=800&q=80" alt="Kids Fashion">
                   </div>
@@ -475,7 +508,26 @@ session_start();
                       <div class="p-cat">Kids</div>
                       <h3 class="p-name">Summer Denim Set</h3>
                       <div class="p-price">Rs. 899</div>
-                  </div>
+                  </div> -->
+
+
+
+<div class="product-card">
+    <div class="p-img-container">
+        <img src="https://images.unsplash.com/photo-1514090458221-65bb69cf63e6?auto=format&fit=crop&w=800&q=80" alt="Kids Fashion">
+    </div>
+    <div class="p-info">
+        <div class="p-cat">Kids</div>
+        <h3 class="p-name">Summer Denim Set</h3>
+        <div class="p-price">Rs. 899</div>
+    </div>
+</div>
+
+
+
+
+
+
               </div>
           </div>
       </section>
